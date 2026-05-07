@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Check</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #333; font-size: 1.2rem; }
+        .item { margin-bottom: 15px; display: flex; align-items: center; }
+        input[type="checkbox"] { transform: scale(1.5); margin-right: 15px; }
+        button { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; text-align: center; font-weight: bold; }
+        .red-card { background: #ff7675 !important; color: white; }
+        .yellow-card { background: #ffeaa7 !important; color: #333; }
+        .green-card { background: #55efc4 !important; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🏃 明日のラン判定</h2>
+        <div class="item"><input type="checkbox" id="sleep"> 睡眠5h以上確保できる？</div>
+        <div class="item"><input type="checkbox" id="stomach"> お腹の調子は万全？</div>
+        <div class="item"><input type="checkbox" id="family"> 家族は元気？</div>
+        <div class="item"><input type="checkbox" id="foot"> 足に痛み・違和感はない？</div>
+        <div class="item"><input type="checkbox" id="mental"> 走りたい意欲がある？</div>
+        <div class="item"><input type="checkbox" id="weather"> 天気は問題ない？</div>
+        
+        <button onclick="judge()">判定する</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function judge() {
+            const checks = [
+                document.getElementById('sleep').checked,
+                document.getElementById('stomach').checked,
+                document.getElementById('family').checked,
+                document.getElementById('foot').checked,
+                document.getElementById('mental').checked,
+                document.getElementById('weather').checked
+            ];
+            
+            const yesCount = checks.filter(v => v).length;
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+
+            if (yesCount === 6) {
+                resultDiv.className = 'green-card';
+                resultDiv.innerHTML = "判定：GO!<br>16km楽しんできてください！";
+            } else if (yesCount >= 4) {
+                resultDiv.className = 'yellow-card';
+                resultDiv.innerHTML = "判定：調整走（半分以下）<br>無理せず体を動かす程度に。";
+            } else {
+                resultDiv.className = 'red-card';
+                resultDiv.innerHTML = "判定：完全休養<br>今は回復がトレーニングです。寝ましょう！";
+            }
+        }
+    </script>
+</body>
+</html>

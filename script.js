@@ -16,7 +16,7 @@ function diagnose() {
     let shouldStop = false;
     let mainReason = "";
 
-    // 判定ロジック
+    // 判定ロジック（一発休養 or 累積3項目以上）
     if (criticalChecks.length > 0) {
         shouldStop = true;
         mainReason = `「${criticalChecks[0].value}」などの絶対条件に該当しています。`;
@@ -25,7 +25,7 @@ function diagnose() {
         mainReason = `累積条件（疲労や違和感）が ${cautionChecks.length} つ重なっています。`;
     }
 
-    // 結果の描画
+    // 結果コンテナの可視化
     resultArea.style.display = 'block';
 
     if (shouldStop) {
@@ -48,6 +48,6 @@ function diagnose() {
         resultComment.innerHTML = advice;
     }
 
-    // 診断結果へスムーズにスクロール
+    // 視覚的UXを高めるためのスムーズスクロール
     resultArea.scrollIntoView({ behavior: 'smooth' });
 }

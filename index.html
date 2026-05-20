@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>翌朝のランニング判定ツール | おしえてかめさん</title>
+    <title>ランニングチェッカー | おしえてかめさん</title>
     
     <!-- ホーム画面ショートカット用のアイコン設定 -->
-    <!-- iOS (Safari) 用 -->
     <link rel="apple-touch-icon" href="IMG_4273.png">
-    <!-- Android (Chrome) / 一般的なファビコン代替用 -->
     <link rel="icon" type="image/png" href="IMG_4273.png">
     
     <link rel="stylesheet" href="style.css">
@@ -18,13 +16,13 @@
 <div class="container">
     <header>
         <h1>ランニングチェッカー</h1>
-        <p>〜 明日の朝は走って良い？ 〜</p>
+        <p>明日の朝は走っても良い？</p>
     </header>
 
     <form id="checkerForm">
         <!-- 一発アウトの項目 -->
         <section id="criticalSection">
-            <h2><span class="badge danger">絶対条件</span> 1つでもあれば「一発休養」</h2>
+            <h2><span class="badge danger">絶対条件</span> 1つでもあれば一発休養</h2>
             <div class="checkbox-group">
                 <label class="check-item">
                     <input type="checkbox" class="critical-check" value="走りたくない気持ち">
@@ -51,7 +49,7 @@
 
         <!-- 加算アウトの項目 -->
         <section id="cautionSection">
-            <h2><span class="badge warning">累積条件</span> 3つ以上重なったら「ストップ」</h2>
+            <h2><span class="badge warning">累積条件</span> 3つ以上重なったらストップ</h2>
             <div class="checkbox-group">
                 <label class="check-item">
                     <input type="checkbox" class="caution-check" value="ロング日勤後">
@@ -82,6 +80,7 @@
     <!-- 結果表示エリア -->
     <div id="resultArea" class="result-modal">
         <div id="resultTitle" class="result-title"></div>
+        <img id="resultImage" class="result-img" src="" alt="判定結果イメージ">
         <div id="resultComment" class="result-comment"></div>
     </div>
 </div>

@@ -3,60 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run Check</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f7f6; }
-        .card { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { color: #333; font-size: 1.2rem; }
-        .item { margin-bottom: 15px; display: flex; align-items: center; }
-        input[type="checkbox"] { transform: scale(1.5); margin-right: 15px; }
-        button { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; text-align: center; font-weight: bold; }
-        .red-card { background: #ff7675 !important; color: white; }
-        .yellow-card { background: #ffeaa7 !important; color: #333; }
-        .green-card { background: #55efc4 !important; color: #333; }
-    </style>
+    <title>翌朝のランニング判定ツール | おしえてかめさん</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
-        <h2>🏃 明日のラン判定</h2>
-        <div class="item"><input type="checkbox" id="sleep"> 睡眠5h以上確保できる？</div>
-        <div class="item"><input type="checkbox" id="stomach"> お腹の調子は万全？</div>
-        <div class="item"><input type="checkbox" id="family"> 家族は元気？</div>
-        <div class="item"><input type="checkbox" id="foot"> 足に痛み・違和感はない？</div>
-        <div class="item"><input type="checkbox" id="mental"> 走りたい意欲がある？</div>
-        <div class="item"><input type="checkbox" id="weather"> 天気は問題ない？</div>
-        
-        <button onclick="judge()">判定する</button>
-        <div id="result"></div>
+
+<div class="container">
+    <header>
+        <h1>明日あさ走ってもいい？チェッカー</h1>
+        <p>〜 無理しがちなランナーのための心のブレーキ 〜</p>
+    </header>
+
+    <form id="checkerForm">
+        <!-- 一発アウトの項目 -->
+        <section id="criticalSection">
+            <h2><span class="badge danger">絶対条件</span> 1つでもあれば「一発休養」</h2>
+            <div class="checkbox-group">
+                <label class="check-item">
+                    <input type="checkbox" class="critical-check" value="走りたくない気持ち">
+                    <span>ぶっちゃけ、今はあまり走りたくない</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="critical-check" value="体調不良">
+                    <span>体調不良（発熱・喉の痛み・胃腸症状など）</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="critical-check" value="睡眠不足">
+                    <span>睡眠時間が5時間以下</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="critical-check" value="義務感">
+                    <span>「走らなければいけない」と思っている</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="critical-check" value="雨">
+                    <span>明日の朝、雨が降る（または予報）</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- 加算アウトの項目 -->
+        <section id="cautionSection">
+            <h2><span class="badge warning">累積条件</span> 3つ以上重なったら「ストップ」</h2>
+            <div class="checkbox-group">
+                <label class="check-item">
+                    <input type="checkbox" class="caution-check" value="ロング日勤後">
+                    <span>ロング日勤の直後、または翌朝である</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="caution-check" value="眠気">
+                    <span>とにかく眠気が強い</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="caution-check" value="ダルさ">
+                    <span>身体が重く、全体的なダルさがある</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="caution-check" value="足の違和感">
+                    <span>足や関節に軽い痛み・違和感がある</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" class="caution-check" value="水分不足">
+                    <span>今日、日中に水分をあまり摂れなかった</span>
+                </label>
+            </div>
+        </section>
+
+        <button type="button" class="btn-calc" id="diagnoseBtn">布団に入る前に判定する</button>
+    </form>
+
+    <!-- 結果表示エリア -->
+    <div id="resultArea" class="result-modal">
+        <div id="resultTitle" class="result-title"></div>
+        <div id="resultComment" class="result-comment"></div>
     </div>
+</div>
 
-    <script>
-        function judge() {
-            const checks = [
-                document.getElementById('sleep').checked,
-                document.getElementById('stomach').checked,
-                document.getElementById('family').checked,
-                document.getElementById('foot').checked,
-                document.getElementById('mental').checked,
-                document.getElementById('weather').checked
-            ];
-            
-            const yesCount = checks.filter(v => v).length;
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-
-            if (yesCount === 6) {
-                resultDiv.className = 'green-card';
-                resultDiv.innerHTML = "判定：GO!<br>16km楽しんできてください！";
-            } else if (yesCount >= 4) {
-                resultDiv.className = 'yellow-card';
-                resultDiv.innerHTML = "判定：調整走（半分以下）<br>無理せず体を動かす程度に。";
-            } else {
-                resultDiv.className = 'red-card';
-                resultDiv.innerHTML = "判定：完全休養<br>今は回復がトレーニングです。寝ましょう！";
-            }
-        }
-    </script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ランニングチェッカー | おしえてかめさん</title>
     
-    <!-- スマホのホーム画面アイコン設定 -->
+    <!-- スマホホーム画面用のアイコン設定 -->
     <link rel="apple-touch-icon" href="IMG_4273.png">
     <link rel="icon" type="image/png" href="IMG_4273.png">
     
-    <!-- 判定画像を一瞬で出すための超高速プリロード -->
+    <!-- 画像をタイムラグなしでパッと出すための強力なプリロード -->
     <link rel="preload" href="IMG_4274.png" as="image" fetchpriority="high">
     <link rel="preload" href="IMG_4275.png" as="image" fetchpriority="high">
     
@@ -18,7 +18,7 @@
 <body>
 
 <div class="container">
-    <!-- 【1面】条件入力ページ -->
+    <!-- 【入力画面】 -->
     <div id="inputPage">
         <header>
             <h1>ランニングチェッカー</h1>
@@ -51,22 +51,20 @@
             <button type="button" class="btn-calc" id="diagnoseBtn">布団に入る前に判定する</button>
         </form>
         
-        <!-- 履歴表示（翌日の日付ベースで記録） -->
+        <!-- カード形式の履歴表示エリア -->
         <div class="history-box">
             <h3>これまでのスケジュール記録</h3>
-            <ul id="historyList"></ul>
+            <div id="historyGrid" class="history-grid"></div>
         </div>
     </div>
 
-    <!-- 【2面】判定結果ページ（初期状態は非表示） -->
+    <!-- 【判定結果画面】説明を削ぎ落とした極シンプル構成 -->
     <div id="resultPage" class="result-page-view" style="display: none;">
         <div id="resultTitle" class="result-title"></div>
         
         <div class="img-wrapper">
             <img id="resultImage" class="result-img" src="" alt="判定結果">
         </div>
-        
-        <div id="resultMessage" class="result-message"></div>
         
         <button type="button" class="btn-back" id="backBtn">チェック画面に戻る</button>
     </div>

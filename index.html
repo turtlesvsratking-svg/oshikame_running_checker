@@ -9,79 +9,64 @@
     <link rel="apple-touch-icon" href="IMG_4273.png">
     <link rel="icon" type="image/png" href="IMG_4273.png">
     
+    <!-- 画像を最速で表示させるための強力なプリロードオプション -->
+    <link rel="preload" href="IMG_4274.png" as="image" fetchpriority="high">
+    <link rel="preload" href="IMG_4275.png" as="image" fetchpriority="high">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>ランニングチェッカー</h1>
-        <p>明日の朝は走っても良い？</p>
-    </header>
+    <!-- 入力フォーム画面（初期表示） -->
+    <div id="inputPage">
+        <header>
+            <h1>ランニングチェッカー</h1>
+            <p>明日の朝は走っても良い？</p>
+        </header>
 
-    <form id="checkerForm">
-        <!-- 一発アウトの項目 -->
-        <section id="criticalSection">
-            <h2><span class="badge danger">絶対条件</span> 1つでもあれば一発休養</h2>
-            <div class="checkbox-group">
-                <label class="check-item">
-                    <input type="checkbox" class="critical-check" value="走りたくない気持ち">
-                    <span>ぶっちゃけ、今はあまり走りたくない</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="critical-check" value="体調不良">
-                    <span>体調不良（発熱・喉の痛み・胃腸症状など）</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="critical-check" value="睡眠不足">
-                    <span>睡眠時間が5時間以下</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="critical-check" value="義務感">
-                    <span>「走らなければいけない」と思っている</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="critical-check" value="雨">
-                    <span>明日の朝、雨が降る（または予報）</span>
-                </label>
-            </div>
-        </section>
+        <form id="checkerForm">
+            <section id="criticalSection">
+                <h2><span class="badge danger">絶対条件</span> 1つでもあれば一発休養</h2>
+                <div class="checkbox-group">
+                    <label class="check-item"><input type="checkbox" class="critical-check" value="走りたくない気持ち"><span>ぶっちゃけ、今はあまり走りたくない</span></label>
+                    <label class="check-item"><input type="checkbox" class="critical-check" value="体調不良"><span>体調不良（発熱・喉の痛み・胃腸症状など）</span></label>
+                    <label class="check-item"><input type="checkbox" class="critical-check" value="睡眠不足"><span>睡眠時間が5時間以下</span></label>
+                    <label class="check-item"><input type="checkbox" class="critical-check" value="義務感"><span>「走らなければいけない」と思っている</span></label>
+                    <label class="check-item"><input type="checkbox" class="critical-check" value="雨"><span>明日の朝、雨が降る（または予報）</span></label>
+                </div>
+            </section>
 
-        <!-- 加算アウトの項目 -->
-        <section id="cautionSection">
-            <h2><span class="badge warning">累積条件</span> 3つ以上重なったらストップ</h2>
-            <div class="checkbox-group">
-                <label class="check-item">
-                    <input type="checkbox" class="caution-check" value="ロング日勤後">
-                    <span>ロング日勤の直後、または翌朝である</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="caution-check" value="眠気">
-                    <span>とにかく眠気が強い</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="caution-check" value="ダルさ">
-                    <span>身体が重く、全体的なダルさがある</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="caution-check" value="足の違和感">
-                    <span>足や関節に軽い痛み・違和感がある</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" class="caution-check" value="水分不足">
-                    <span>今日、日中に水分をあまり摂れなかった</span>
-                </label>
-            </div>
-        </section>
+            <section id="cautionSection">
+                <h2><span class="badge warning">累積条件</span> 3つ以上重なったらストップ</h2>
+                <div class="checkbox-group">
+                    <label class="check-item"><input type="checkbox" class="caution-check" value="ロング日勤後"><span>ロング日勤の直後、または翌朝である</span></label>
+                    <label class="check-item"><input type="checkbox" class="caution-check" value="眠気"><span>とにかく眠気が強い</span></label>
+                    <label class="check-item"><input type="checkbox" class="caution-check" value="ダルさ"><span>身体が重く、全体的なダルさがある</span></label>
+                    <label class="check-item"><input type="checkbox" class="caution-check" value="足の違和感"><span>足や関節に軽い痛み・違和感がある</span></label>
+                    <label class="check-item"><input type="checkbox" class="caution-check" value="水分不足"><span>今日、日中に水分をあまり摂れなかった</span></label>
+                </div>
+            </section>
 
-        <button type="button" class="btn-calc" id="diagnoseBtn">布団に入る前に判定する</button>
-    </form>
+            <button type="button" class="btn-calc" id="diagnoseBtn">布団に入る前に判定する</button>
+        </form>
+        
+        <!-- 過去の履歴表示エリア -->
+        <div id="historyView" class="history-box">
+            <h3>直近の判定ログ</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
 
-    <!-- 結果表示エリア -->
-    <div id="resultArea" class="result-modal">
+    <!-- 判定結果画面（切り替え用・初期は非表示） -->
+    <div id="resultPage" class="result-page-view" style="display: none;">
         <div id="resultTitle" class="result-title"></div>
-        <img id="resultImage" class="result-img" src="" alt="判定結果イメージ">
+        <div class="img-wrapper">
+            <img id="resultImage" class="result-img" src="" alt="判定結果画像">
+        </div>
         <div id="resultComment" class="result-comment"></div>
+        <div id="praiseMessage" class="praise-box"></div>
+        <button type="button" class="btn-back" id="backBtn">チェック画面に戻る</button>
     </div>
 </div>
 

@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (diagnoseBtn) diagnoseBtn.addEventListener('click', diagnose);
     if (backBtn) backBtn.addEventListener('click', showInputPage);
 
-    // 起動時にローカルストレージから履歴を読み込んで描画
     renderHistory();
 });
 
@@ -17,58 +16,53 @@ function diagnose() {
     const resultPage = document.getElementById('resultPage');
     const resultTitle = document.getElementById('resultTitle');
     const resultImage = document.getElementById('resultImage');
-    const resultComment = document.getElementById('resultComment');
-    const praiseMessage = document.getElementById('praiseMessage');
+    const resultMessage = document.getElementById('resultMessage');
 
     let shouldStop = false;
-    let reasonText = "";
 
-    if (criticalChecks.length > 0) {
+    // 1つでも絶対条件があるか、累積が3つ以上で「休息」
+    if (criticalChecks.length > 0 || cautionChecks.length >= 3) {
         shouldStop = true;
-        reasonText = `絶対条件（${criticalChecks[0].value}など）の検出`;
-    } else if (cautionChecks.length >= 3) {
-        shouldStop = true;
-        reasonText = `累積条件が${cautionChecks.length}つ重複`;
     }
 
-    // 画面切り替え（フォームを非表示にし、結果を大きく表示）
+    // 入力した日の【次の日の日付】を計算（5/21の夜に入力したら5/22を生成）
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateStr = `${tomorrow.getMonth() + 1}/${tomorrow.getDate()}`;
+
+    // 画面の切り替え（全画面風に大きく表示）
     inputPage.style.display = 'none';
     resultPage.style.display = 'block';
 
-    const today = new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
-    let statusLog = "";
+    let logText = "";
 
     if (shouldStop) {
-        statusLog = "絶対休養";
+        logText = "走っちゃダメ";
         resultTitle.style.color = "var(--danger-color)";
-        resultTitle.innerText = "明日の朝は絶対休戦です";
-        resultImage.src = "IMG_4274.png"; // プリロード済みのため瞬時に表示
+        resultTitle.innerText = "明日は【 休息 】です";
+        resultImage.src = "IMG_4274.png"; // 休養用の画像
         
-        resultComment.innerHTML = `<strong>理由: ${reasonText}</strong><br>心身が危険信号を出しています。明日のランニングはスケジュールから完全に除外してください。`;
-        
-        // 罪悪感解消・徹底承認ロジック
-        praiseMessage.style.display = "block";
-        praiseMessage.innerHTML = `
-            <h4>【承認】あなたの選択は100点満点です</h4>
-            <p>ここで休めるのは、自分の身体を客観的に管理できている素晴らしい証拠であり、一流の自己管理能力です。サボりではなく「超回復」という極めて重要な練習メニューを今、消化しています。</p>
-            <p style="margin-top: 8px;"><strong>休むことの効果:</strong> 筋肉の微細な損傷が修復され、心肺機能の疲労が抜けることで、次回走る際の大幅なパフォーマンス向上と怪我の予防が約束されます。</p>
+        // 罪悪感を完全に打ち消す徹底承認＆効果メッセージ
+        resultMessage.innerHTML = `
+            <p style="font-size: 1.1rem; font-weight: bold; color: var(--danger-color); margin-bottom: 8px;">✨ ナイス判断！素晴らしい自己管理です ✨</p>
+            <p>今夜「休む」と決断できたあなたを、全力でリスペクトします！これはサボりではなく、次に強く速く走るための<strong>『積極的超回復メニュー』</strong>の開始です。</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #555;">💡 <strong>休むことの科学的効果:</strong><br>睡眠中に筋肉の微細な傷が修復され、心肺の疲労が抜けることで、次回走る時のフォームが安定し、故障リスクを劇的に下げることができます。</p>
         `;
     } else {
-        statusLog = "出撃OK";
+        logText = "走ってOK！";
         resultTitle.style.color = "var(--success-color)";
-        resultTitle.innerText = "明日の朝は出撃OKです";
-        resultImage.src = "IMG_4275.png";
-        praiseMessage.style.display = "none";
+        resultTitle.innerText = "明日は【 走ってOK 】です";
+        resultImage.src = "IMG_4275.png"; // 出撃OK用の画像
         
-        if (cautionChecks.length > 0) {
-            resultComment.innerHTML = `疲労サインが${cautionChecks.length}つあります。ペースを抑えてのんびり走るのがおすすめです。`;
-        } else {
-            resultComment.innerHTML = "コンディションは良好です。体調に合わせて走ってください。";
-        }
+        resultMessage.innerHTML = `
+            <p style="font-size: 1.1rem; font-weight: bold; color: var(--success-color); margin-bottom: 8px;">👍 コンディション良好です！</p>
+            <p>心身ともに走る準備が整っています。明日の朝は、無理のない快適なペースで気持ちよく風を感じてきてくださいね！</p>
+        `;
     }
 
-    // ローカルストレージへ保存
-    saveLog(today, statusLog);
+    // 「〇/〇は走っちゃダメ」の形式でローカルストレージへ保存
+    const storageData = `${dateStr}は${logText}`;
+    saveLog(storageData);
     renderHistory();
     window.scrollTo(0, 0);
 }
@@ -76,33 +70,37 @@ function diagnose() {
 function showInputPage() {
     document.getElementById('resultPage').style.display = 'none';
     document.getElementById('inputPage').style.display = 'block';
+    
+    // チェックボックスをすべてリセット
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    
     window.scrollTo(0, 0);
 }
 
-// ローカルストレージ保存処理
-function saveLog(date, status) {
-    let history = JSON.parse(localStorage.getItem('runCheckerHistory')) || [];
-    // 直近5件を維持
-    history.unshift({ date, status });
+// ローカルストレージへの単純保存（直近5日分）
+function saveLog(logEntry) {
+    let history = JSON.parse(localStorage.getItem('runCheckerSimpleHistory')) || [];
+    history.unshift(logEntry);
     if (history.length > 5) history.pop();
-    localStorage.setItem('runCheckerHistory', JSON.stringify(history));
+    localStorage.setItem('runCheckerSimpleHistory', JSON.stringify(history));
 }
 
-// 履歴の描画処理
+// 履歴の描画
 function renderHistory() {
     const historyList = document.getElementById('historyList');
     if (!historyList) return;
     
-    const history = JSON.parse(localStorage.getItem('runCheckerHistory')) || [];
+    const history = JSON.parse(localStorage.getItem('runCheckerSimpleHistory')) || [];
     if (history.length === 0) {
-        historyList.innerHTML = "<li style='color:#888;'>まだ履歴はありません</li>";
+        historyList.innerHTML = "<li style='color:#888;'>まだ判定記録はありません</li>";
         return;
     }
     
-    historyList.innerHTML = history.map(item => `
-        <li>
-            <span>${item.date}</span>
-            <span style="font-weight:bold; color:${item.status === '絶対休養' ? 'var(--danger-color)' : 'var(--success-color)'}">${item.status}</span>
-        </li>
-    `).join('');
+    historyList.innerHTML = history.map(item => {
+        // 文字列に「走ってOK！」が含まれているかで色を変える
+        const isOk = item.includes("走ってOK！");
+        const color = isOk ? "var(--success-color)" : "var(--danger-color)";
+        return `<li style="color: ${color}; font-weight: 500;">${item}</li>`;
+    }).join('');
 }

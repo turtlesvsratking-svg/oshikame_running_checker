@@ -1,12 +1,25 @@
 :root {
-    --primary-color: #4A7C59;   /* カメさんグリーン */
-    --bg-color: #FAF9F5;        /* 温かみのあるオフホワイト */
+    --primary-color: #4A7C59;
+    --bg-color: #FAF9F5;
     --card-bg: #FFFFFF;
     --text-color: #333333;
-    --danger-color: #C94A29;    /* 強制休養の赤 */
-    --warning-color: #D9A05B;   /* 注意のオレンジ */
-    --success-color: #68A356;   /* 出撃OKの緑 */
-    --border-radius: 12px;
+    --danger-color: #C94A29;
+    --warning-color: #D9A05B;
+    --success-color: #68A356;
+    --border-radius: 16px;
+    --praise-bg: #F0F7F4;
+    --praise-border: #B2D7C2;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --card-bg: #1E1E1E;
+        --text-color: #E0E0E0;
+        --primary-color: #68A356;
+        --praise-bg: #1A261F;
+        --praise-border: #2D4A38;
+    }
 }
 
 * {
@@ -33,13 +46,14 @@ body {
     background: var(--card-bg);
     padding: 30px 25px;
     border-radius: var(--border-radius);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 
 header {
     text-align: center;
     margin-bottom: 25px;
-    border-bottom: 2px dashed #E0DCD3;
+    border-bottom: 2px dashed rgba(0,0,0,0.1);
     padding-bottom: 15px;
 }
 
@@ -47,24 +61,19 @@ header h1 {
     font-size: 1.5rem;
     color: var(--primary-color);
     margin-bottom: 6px;
-    letter-spacing: 0.05em;
     font-weight: 700;
 }
 
 header p {
     font-size: 0.95rem;
-    color: #555;
-    font-weight: 500;
+    color: #666;
 }
 
-section {
-    margin-bottom: 25px;
-}
+section { margin-bottom: 25px; }
 
 section h2 {
     font-size: 0.95rem;
     margin-bottom: 12px;
-    color: #444;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -90,33 +99,18 @@ section h2 {
     display: flex;
     align-items: center;
     padding: 14px 15px;
-    background-color: #F8F7F4;
-    border: 1px solid #EAE7E0;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.check-item:active {
-    transform: scale(0.98);
-    background-color: #F0EEE9;
 }
 
 .check-item input[type="checkbox"] {
     width: 22px;
     height: 22px;
     margin-right: 12px;
-    cursor: pointer;
     accent-color: var(--primary-color);
     flex-shrink: 0;
-}
-
-.check-item span {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #444;
 }
 
 .btn-calc {
@@ -130,66 +124,103 @@ section h2 {
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.2);
-    transition: all 0.2s ease;
 }
 
-.btn-calc:hover {
-    background-color: #3B6346;
-}
-
-.btn-calc:active {
-    transform: scale(0.98);
-    box-shadow: none;
-}
-
-/* 結果表示エリア */
-.result-modal {
-    margin-top: 25px;
-    padding: 22px;
-    border-radius: var(--border-radius);
+/* ページ切り替え用：結果大画面表示スタイル */
+.result-page-view {
+    animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     text-align: center;
-    display: none;
-    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .result-title {
-    font-size: 1.35rem;
+    font-size: 1.6rem;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+}
+
+.img-wrapper {
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .result-img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
 }
 
 .result-comment {
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.6;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 12px 15px;
-    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 15px;
+    background: rgba(0,0,0,0.02);
+    border-radius: 8px;
+}
+
+/* 承認・心理的安全性ボックス */
+.praise-box {
+    background-color: var(--praise-bg);
+    border: 1px solid var(--praise-border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.praise-box h4 {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+}
+
+.btn-back {
+    display: inline-block;
     width: 100%;
+    background-color: #666;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.status-go {
-    background-color: #EDF7ED;
-    border: 2px solid var(--success-color);
-    color: #1E4620;
+/* 履歴ログスタイル */
+.history-box {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0,0,0,0.08);
 }
 
-.status-stop {
-    background-color: #FDF2F2;
-    border: 2px solid var(--danger-color);
-    color: #611A1A;
+.history-box h3 {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.history-box ul {
+    list-style: none;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.history-box li {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.01);
+    border-radius: 4px;
 }
